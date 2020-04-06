@@ -13,6 +13,10 @@ router.get("/register",function(req,res){
 router.post("/register",function(req,res){
     console.log("route works")
     var newUser = new User({username: req.body.username});
+    if (req.body.adminCode == "dtusucks@123")
+    {
+        newUser.isAdmin = true;
+    }
     User.register(newUser,req.body.password,function(err,user){
         if(err)
         {

@@ -12,38 +12,7 @@
             <div>Location:
 
             </div>
-            <div id="map"></div>
-                <script src="https://unpkg.com/es6-promise@4.2.4/dist/es6-promise.auto.min.js"></script>
-                <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
-                <script>
-                    mapboxgl.accessToken = 'pk.eyJ1Ijoic2hyZXlkMTIzIiwiYSI6ImNrOG9yZHVscTA1MDYzZnRkY2VtcDd5MWYifQ.G5MQ9uSX90EDrzONZWQ8Hg';
-                var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
-                mapboxClient.geocoding
-                .forwardGeocode({
-                query: 'Delhi',
-                autocomplete: false,
-                limit: 1
-                })
-                .send()
-                .then(function(response) {
-                if (
-                response &&
-                response.body &&
-                response.body.features &&
-                response.body.features.length
-                ) {
-                var feature = response.body.features[0];
-                
-                var map = new mapboxgl.Map({
-                container: 'map',
-                style: 'mapbox://styles/mapbox/streets-v11',
-                center: feature.center,
-                zoom: 10
-                });
-                new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
-                }
-                });
-                </script>
+            
         </div>
         
         <div class="col-md-9">
