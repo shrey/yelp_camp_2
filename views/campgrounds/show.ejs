@@ -1,0 +1,101 @@
+<%-include("../partials/header")%>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <!-- <p class="lead">YelpCamp</p>
+            <div class="list-group">
+                <li class="list-group-item active">Info 1</li>
+                <li class="list-group-item">Info 2</li>
+                <li class="list-group-item">Info 3</li>
+            </div> -->
+            <div>Location:
+
+            </div>
+            <div id="map"></div>
+                <script src="https://unpkg.com/es6-promise@4.2.4/dist/es6-promise.auto.min.js"></script>
+                <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
+                <script>
+                    mapboxgl.accessToken = 'pk.eyJ1Ijoic2hyZXlkMTIzIiwiYSI6ImNrOG9yZHVscTA1MDYzZnRkY2VtcDd5MWYifQ.G5MQ9uSX90EDrzONZWQ8Hg';
+                var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+                mapboxClient.geocoding
+                .forwardGeocode({
+                query: 'Delhi',
+                autocomplete: false,
+                limit: 1
+                })
+                .send()
+                .then(function(response) {
+                if (
+                response &&
+                response.body &&
+                response.body.features &&
+                response.body.features.length
+                ) {
+                var feature = response.body.features[0];
+                
+                var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: feature.center,
+                zoom: 10
+                });
+                new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+                }
+                });
+                </script>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="thumbnail">
+                <img src="<%=campground.img%>" class="image-responsive">
+                <div class="caption">
+                    <h4 class="pull-right">$<%=campground.price%>/Night</h4>
+                    <h4><a href="#"><%=campground.name%></a></h4>
+                    <h5 class="pull-right"><%=moment(campground.createdAt).fromNow()%></h5>
+                    <p><%=campground.desc%></p>
+                    <em><p>Submitted By <%=campground.author.username%></p></em>
+                    
+                    <%if(currentUser && campground.author.id.equals(currentUser._id)){%>
+                        <a href="/campgrounds/<%=campground._id%>/edit" class="btn btn-warning">Edit</a>
+                        <form action="/campgrounds/<%=campground._id%>?_method=DELETE" method = "POST" class = "delete-form">
+                            <button class = "btn btn-danger">Delete</button>
+                        </form>
+                <%}%>
+                </div>
+            </div>
+            <div class="well">
+                <div class="text-right">
+                    <a href="/campgrounds/<%=campground._id%>/comments/new" class="btn btn-success">Add New Comment</a>
+                </div>
+                <hr>
+                <%campground.comments.forEach(function(comment){%>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong><%=comment.author.username%></strong>
+                            <span class="pull-right"><%=moment(comment.createdAt).fromNow()%></span><br>
+                            <%if(currentUser && comment.author.id.equals(currentUser._id)){%>
+                                <span class="pull-right"><a href="/campgrounds/<%=campground._id%>/comments/<%=comment._id%>/edit" class="btn btn-warning btn-xs">Update</a></span>
+                                <span class = "pull-right"><form action="/campgrounds/<%=campground._id%>/comments/<%=comment._id%>?_method=DELETE" method = "POST" class = "delete-form">
+                                <button class = "btn btn-danger btn-xs" style = " margin-right: 5px;">Delete</button>
+                                </form></span>
+                            <%}%>
+                            
+                            <p>
+                                    <%= comment.text %>
+                            </p>
+                        </div>
+                    </div>
+                <%})%>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+    <%-include("../partials/footer")%>
