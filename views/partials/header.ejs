@@ -19,7 +19,7 @@
 					<%if(currentUser.isAdmin){%>
 						<li><a href="#"><strong>Admin Account</strong></a></li>
 					<%}%>
-					<li> <a href = "#">Currently Signed in As <%=currentUser.username%></a></li>	
+					<li> <a href = "/users/<%=currentUser._id%>"><%=currentUser.username%></a></li>	
 				<li><a href = "/logout">Logout </a></li>
 				<%}%>
 			</ul>

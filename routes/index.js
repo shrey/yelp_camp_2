@@ -3,8 +3,7 @@ var router = express.Router();
 var passport = require("passport");
 var User = require("../models/user");
 var bodyParser = require("body-parser");
-
-router.get("/",function(req,res){
+var middleware = require("../middleware");router.get("/",function(req,res){
 	res.render("landing.ejs");
 });
 router.get("/register",function(req,res){
@@ -12,7 +11,12 @@ router.get("/register",function(req,res){
 })
 router.post("/register",function(req,res){
     console.log("route works")
-    var newUser = new User({username: req.body.username});
+    var newUser = new User({username: req.body.username,
+                            firstName: req.body.firstName,
+                            lastName:   req.body.lastName,
+                            email: req.body.email,
+                            avatar: req.body.avatar
+    });
     if (req.body.adminCode == "dtusucks@123")
     {
         newUser.isAdmin = true;
@@ -47,6 +51,18 @@ router.get("/logout",function(req,res){
     req.logout();
     req.flash("success","Logged you out");
     res.redirect("/campgrounds");
+})
+//User Profile
+router.get("/users/:id",middleware.isLoggedIn,function(req,res){
+    User.findById(req.params.id,function(err,foundUser){
+        if(!foundUser || err){
+            req.flash("error","User not found");
+            res.redirect("/campgrounds");
+        }
+        else{
+            res.render("users/show",{user: foundUser});
+        }
+    })
 })
 
 
