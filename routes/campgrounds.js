@@ -93,6 +93,7 @@ router.put("/:id",middleware.checkCampgroundOwnership,function(req,res){
             res.redirect("/campgrounds");
         }
         else{
+            req.flash("success","Edited Campground")
             res.redirect("/campgrounds/"+req.params.id);
         }
     })
@@ -110,7 +111,9 @@ router.delete("/:id",middleware.checkCampgroundOwnership,function(req,res){
                 {
                     console.log(err);
                 }
+                req.flash("error","Deleted the Campground")
                 res.redirect("/campgrounds");
+
             })
             
         }
