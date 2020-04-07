@@ -3,6 +3,7 @@ var router = express.Router();
 var Campground = require("../models/campground");
 var Comment = require("../models/comments");
 var middleware = require("../middleware");
+var User = require("../models/user");
 //INDEX ROUTE
 //change pathsss!!!
 router.get("/",function(req,res){
@@ -34,16 +35,27 @@ router.post("/",middleware.isLoggedIn,function(req,res){
                   },
                   price: req.body.price
                 };
-                  Campground.create(newCamp,function(err,campground){
-                      if(err){
-                          console.log(err);
-                        }
-                        else{
-                            console.log("Added A Campground");
-                            console.log(campground)
-                            res.redirect("/campgrounds")
-                        }
-                  })
+                  
+                
+                User.findById(req.user._id,function(err,foundUser){
+                    if(err){
+                        req.flash("error","Some error occured");
+                        res.redirect("/campgrounds");
+                    }
+                    else{
+                        Campground.create(newCamp,function(err,campground){
+                            if(err){
+                                console.log(err);
+                              }
+                              else{
+                               foundUser.campgrounds.push(campground);
+                               foundUser.save();
+                               res.redirect("/campgrounds");
+                               }
+                      })
+                    }
+                })
+                    
 	
                 })
 

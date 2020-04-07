@@ -3,6 +3,7 @@ var router = express.Router();
 var passport = require("passport");
 var User = require("../models/user");
 var bodyParser = require("body-parser");
+var Campground = require("../models/campground");
 var middleware = require("../middleware");router.get("/",function(req,res){
 	res.render("landing.ejs");
 });
@@ -54,13 +55,25 @@ router.get("/logout",function(req,res){
 })
 //User Profile
 router.get("/users/:id",middleware.isLoggedIn,function(req,res){
-    User.findById(req.params.id,function(err,foundUser){
+    User.findById(req.params.id).populate("campgrounds").exec(function(err,foundUser){
         if(!foundUser || err){
             req.flash("error","User not found");
             res.redirect("/campgrounds");
         }
         else{
-            res.render("users/show",{user: foundUser});
+            
+            Campground.find({"author.id": req.params.id},function(err,foundCampgrounds){
+                if(err){
+                    req.flash("error", "Something went wrong");
+                    res.redirect("/campgrounds")
+
+                }
+                else{
+                    console.log(foundCampgrounds);
+                     res.render("users/show",{user: foundUser,campgrounds:foundCampgrounds});
+                }
+            });
+            
         }
     })
 })

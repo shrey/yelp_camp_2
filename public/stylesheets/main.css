@@ -3,8 +3,13 @@
 }
 .thumbnail{
     padding: 0px;
+    margin-top: 20px
 }
 /* delete in show form*/
 .delete-form{
     display: inline;
+}
+#controlled{
+    height: 250px;
+
 }
